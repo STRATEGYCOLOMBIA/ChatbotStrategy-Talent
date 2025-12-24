@@ -1,13 +1,6 @@
 window.APP_CONFIG = {
-  // 🔑 API de OpenAI (usa tu key personal)
-  OPENAI_API_KEY: "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",
-  OPENAI_MODEL: "gpt-4o-mini", // o "gpt-4o", "gpt-5" si tienes acceso
-
-  // Power Automate
-  POWER_AUTOMATE_URL: "https://default8bf4cc2d4c114c129cc2a472854e3b.f2.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b64bb88339479db82e2386d98f213e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=iUJJ_mgqq8sL32mI_81ofiOzCjxSVKG-R4M2nISWnh4",
-
-  // Configuración UX
+  WORKER_BASE_URL: "https://white-mouse-bea4.esthefany-ramirez.workers.dev",
   ENABLE_AVAIL_AFTER_MESSAGES: 1,
-  ENABLE_AVAIL_AFTER_MS: 120000 // 2 minutos
+  ENABLE_AVAIL_AFTER_MS: 120000
 };
 
