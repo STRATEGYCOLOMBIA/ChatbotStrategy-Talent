@@ -15,13 +15,16 @@
   // ========= CONFIG =========
   const cfg = window.APP_CONFIG || {};
 
-  // ✅ TU WORKER BASE URL (lo ideal es setearlo en js/config.js como WORKER_BASE_URL)
-  const WORKER_BASE =
-    (cfg.WORKER_BASE_URL || '').replace(/\/+$/, '') ||
-    'https://white-mouse-bea4.esthefany-ramirez.workers.dev'; // <-- CAMBIA si tu worker tiene otro dominio
+  // ✅ Worker base (OBLIGATORIO en config.js)
+  const WORKER_BASE = (cfg.WORKER_BASE_URL || '').replace(/\/+$/, '');
+  if (!WORKER_BASE) {
+    console.warn('[app.js] Falta WORKER_BASE_URL en js/config.js (ej: https://tu-worker.workers.dev)');
+    return;
+  }
 
   // Parámetros por URL (Opción A)
   const params = new URLSearchParams(location.search);
+  // URLSearchParams ya devuelve decodificado normalmente
   const fullName = params.get('fullName') || params.get('name') || '';
   const email = params.get('email') || '';
   const phone = params.get('phone') || '';
@@ -29,7 +32,6 @@
   // Mensaje de bienvenida
   const helloEl = document.getElementById('hello');
   if (helloEl && fullName) {
-    // URLSearchParams ya devuelve decodificado normalmente
     helloEl.textContent = `Hola ${fullName} 👋 Pregunta lo que necesites sobre la vacante.`;
   }
 
@@ -63,7 +65,7 @@
 
   addMsg('bot', '¡Hola! 👋 Soy el chatbot de la vacante. ¿Qué quieres saber?');
 
-  // ========= CTA DISPONIBILIDAD =========
+  // ========= CTA DISPONIBILIDAD (habilitar por mensajes o tiempo) =========
   function maybeEnableAvailabilityCTA() {
     if (availEnabled || !$btnAvail) return;
 
@@ -74,8 +76,10 @@
       availEnabled = true;
       $btnAvail.disabled = false;
       $btnAvail.title = 'Haz clic para confirmar disponibilidad y recibir el link de Bookings';
-      // Importante: tu bubble usa textContent (no HTML), así que evitamos markdown ** **
-      addMsg('bot', '✅ Cuando quieras, puedes Confirmar disponibilidad para enviarte el enlace de agendamiento (Bookings) por correo.');
+      addMsg(
+        'bot',
+        '✅ Cuando quieras, puedes Confirmar disponibilidad para enviarte el enlace de agendamiento (Bookings) por correo.'
+      );
     }
   }
 
@@ -107,7 +111,7 @@
   async function confirmAvailability() {
     const url = `${WORKER_BASE}/availability`;
 
-    // Validación: con opción A, esto debe venir por URL desde el correo
+    // Con opción A, debe venir por URL desde el correo
     if (!email) {
       addMsg(
         'bot',
@@ -191,7 +195,8 @@
   });
 
   if ($btnAvail) {
-    // si no se habilitó aún, queda disabled (como en index.html)
+    // queda disabled hasta que se habilite por mensajes/tiempo
     $btnAvail.addEventListener('click', confirmAvailability);
   }
 })();
+
